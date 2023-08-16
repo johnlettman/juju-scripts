@@ -67,8 +67,8 @@ function main() {
                 sysctl kernel.unprivileged_userns_clone;
                 echo -n "reboot: ";
                 grep \
-                    -E '''kernel\.unprivileged_userns_clone[[:space:]]*=[[:space:]]*0''' \
-                    /etc/sysctl.d/*
+                    -qsE '''kernel\.unprivileged_userns_clone[[:space:]]*=[[:space:]]*0''' \
+                    /etc/sysctl.d/* ; echo $?
             ' 2>"${err_scratch}"; then
                 err 'failed to access machine'
                 log "$(cat "${err_scratch}")"

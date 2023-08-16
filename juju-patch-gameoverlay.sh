@@ -100,8 +100,7 @@ function patch_reboot() {
     if juju_ssh "${model}" "${machine}" '
         grep \
         -qsE '''kernel\.unprivileged_userns_clone[[:space:]]*=[[:space:]]*0''' \
-        /etc/sysctl.d/* ;
-        echo $?
+        /etc/sysctl.d/*
     ' 1>/dev/null 2>&1
     then
         info "[${mm}]" 'reboot patch already exists, skipping'
