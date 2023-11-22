@@ -314,12 +314,12 @@ function save_app_pubkeys() {
     apps_list="$(apps_as_list "$@")"
 
     # base64 encode for portability
-    pubkeys_base64="$(echo "${pubkeys}" | base64 -w0)"
+    pubkeys_base64="$(echo "${pubkeys}" | gzip -c9 | base64 -w0)"
 
     juju run --format=json -a "${apps_list}" "
         (
             echo '${pubkeys_base64}' | 
-                base64 -d > ~${user}/.ssh/authorized_keys;
+                base64 -d | gzip -cd > ~${user}/.ssh/authorized_keys;
             chown '${user}' ~${user}/.ssh/authorized_keys;
             chmod '${SSH_MODE_AUTHORIZED_KEYS}' ~${user}/.ssh/authorized_keys;
             echo 'ok!';
@@ -336,12 +336,12 @@ function save_app_keyscan() {
     apps_list="$(apps_as_list "$@")"
 
     # base64 encode for portability
-    keyscan_base64="$(echo "${keyscan}" | base64 -w0)"
+    keyscan_base64="$(echo "${keyscan}" | gzip -c9 | base64 -w0)"
 
     local keyscan_script="
         (
             echo '${keyscan_base64}' |
-                base64 -d > ~${user}/.ssh/known_hosts;
+                base64 -d | gzip -cd > ~${user}/.ssh/known_hosts;
             chown '${user}' ~${user}/.ssh/known_hosts;
             chmod '${SSH_MODE_KNOWN_HOSTS}' ~${user}/.ssh/known_hosts;
             echo 'ok!';
